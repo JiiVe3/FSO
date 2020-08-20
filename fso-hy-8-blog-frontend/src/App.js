@@ -10,7 +10,7 @@ import loginService from './services/login'
 const InfoMessage = (props) => {
   if (props.message) {
     return (
-      <div style={props.style}>
+      <div style={props.style} id="info">
         {props.message}
       </div>
     )

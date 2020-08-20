@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
-test('renders content', () => {
+describe('<Blog />', () => {
   const blog = {
     title: "Testing blog",
     author: "Writerman",
@@ -17,23 +17,40 @@ test('renders content', () => {
 
   const mockHandler = jest.fn()
 
-  const component = render(
-    <Blog blog={blog} updateBlogs={mockHandler} />
-  )
+  let component
 
-  const button = component.getByText('view')
+  let visibilityButton
 
-  expect(component.container).toHaveTextContent('Testing blog')
+  beforeEach(() => {
+    component = render(
+      <Blog blog={blog} updateBlogs={mockHandler} />
+    )
 
-  expect(component.container).toHaveTextContent('Writerman')
+    visibilityButton = component.getByText('view')
+  })
 
-  expect(component.container).not.toHaveTextContent('test.xyz')
+  test('renders blog', () => {
+    expect(component.container).toHaveTextContent('Testing blog')
+    expect(component.container).toHaveTextContent('Writerman')
+    expect(component.container).not.toHaveTextContent('test.xyz')
+    expect(component.container).not.toHaveTextContent('likes 3')
+  })
 
-  expect(component.container).not.toHaveTextContent('likes 3')
+  test('renders expanded blog', () => {
+    fireEvent.click(visibilityButton)
 
-  fireEvent.click(button)
+    expect(component.container).toHaveTextContent('test.xyz')
+    expect(component.container).toHaveTextContent('likes 3')
+  })
 
-  expect(component.container).toHaveTextContent('test.xyz')
+  test('like button clicks twice', () => {
+    fireEvent.click(visibilityButton)
 
-  expect(component.container).toHaveTextContent('likes 3')
+    const likeButton = component.container.querySelector('.likeButton')
+
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
 })

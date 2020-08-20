@@ -35,17 +35,17 @@ const Blog = ({ blog, user, updateBlogs }) => {
     <div>
       {blog.url}
       <br/>
-      likes {blog.likes} <button onClick={handleLike}>like</button>
+      likes <span className='likes'>{blog.likes}</span> <button onClick={handleLike} className='likeButton'>like</button>
       <br/>
       {blog.user.name}
       <br/>
-      {user ? user.username === blog.user.username ? <button onClick={handleRemove}>remove</button> : null : null}
+      {user ? user.username === blog.user.username ? <button onClick={handleRemove} className='removeButton'>remove</button> : null : null}
     </div>
   )
 
   return (
-    <div style={blogStyle} className='blog'>
-      {blog.title} {blog.author} <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
+    <div style={blogStyle} className="blog">
+      {blog.title} {blog.author} <button onClick={toggleVisibility} className='viewButton'>{visible ? 'hide' : 'view'}</button>
       {visible ? <FullInfo /> : null}
     </div>
   )

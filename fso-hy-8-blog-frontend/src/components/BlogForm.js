@@ -28,33 +28,36 @@ const BlogForm = ({user, updateBlogs, handleInfoMessage, infoStyle}) => {
       <h2>Create New Blog</h2>
       <form onSubmit={handleCreateBlog}>
         <div>
-                title
+          title
           <input
             type="text"
             value={title}
             name="Title"
             onChange={({ target }) => setTitle(target.value)}
+            id="titleInput"
           />
         </div>
         <div>
-                author
+          author
           <input
             type="text"
             value={author}
             name="Author"
             onChange={({ target }) => setAuthor(target.value)}
+            id="authorInput"
           />
         </div>
         <div>
-                url
+          url
           <input
             type="text"
             value={url}
             name="Url"
             onChange={({ target }) => setUrl(target.value)}
+            id="urlInput"
           />
         </div>
-        <button type="submit">create</button>
+        <button type="submit" id="submitButton">create</button>
       </form>
     </div>
   )
