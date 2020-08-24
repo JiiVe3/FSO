@@ -1,3 +1,5 @@
+let lastTimer
+
 const notificationReducer = (state = '', action) => {
     switch (action.type) {
         case 'NOTIFY':
@@ -15,7 +17,8 @@ export const notify = (notification, time = 5) => {
             type: 'NOTIFY',
             data: notification
         })
-        setTimeout(() => dispatch({type: 'CLEAR'}), time * 1000)
+        clearTimeout(lastTimer)
+        lastTimer = setTimeout(() => dispatch({type: 'CLEAR'}), time * 1000)
     }
 }
 

@@ -1,27 +1,25 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { vote } from '../reducers/anecdoteReducer'
 import { notify } from '../reducers/notificationReducer'
 
-const Anecdote = ({anecdote}) => {
-    const dispatch = useDispatch()
-
+const Anecdote = (props) => {
     const handleVote = () => {
-        dispatch(vote(anecdote.id))
-        dispatch(notify(`you voted anecdote: ${anecdote.content}`))
+        props.vote(props.anecdote.id)
+        props.notify(`you voted anecdote: ${props.anecdote.content}`)
     }
 
     return (
         <div>
             <div>
-                {anecdote.content}
+                {props.anecdote.content}
             </div>
             <div>
-                has {anecdote.votes}
+                has {props.anecdote.votes}
                 <button onClick={handleVote}>vote</button>
             </div>
         </div>
     )
 }
 
-export default Anecdote
+export default connect(null, { vote, notify })(Anecdote)

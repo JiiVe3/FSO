@@ -1,17 +1,23 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import Anecdote from './Anecdote'
 
-const AnecdoteList = () => {
-    const { anecdotes, filter } = useSelector(state => state)
-    anecdotes.sort((a, b) => b.votes - a.votes)
+const AnecdoteList = (props) => {
     return (
         <div>
-            {anecdotes.map(anecdote =>
-                anecdote.content.toLowerCase().includes(filter.toLowerCase()) ? <Anecdote anecdote={anecdote} key={anecdote.id} /> : null
+            {props.anecdotes.map(anecdote =>
+                <Anecdote anecdote={anecdote} key={anecdote.id} />
             )}
         </div>
     )
 }
 
-export default AnecdoteList
+const mapStateToProps = (state) => {
+    return {
+        anecdotes: state.anecdotes
+            .filter(anecdote => anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
+            .sort((a, b) => b.votes - a.votes)
+    }
+}
+
+export default connect(mapStateToProps)(AnecdoteList)
