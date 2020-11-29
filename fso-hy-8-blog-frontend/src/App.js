@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Toggleable from './components/Toggleable'
-import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import BlogForm from './components/BlogForm'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import { getBlogs } from './reducers/blogReducer'
+import { login, storageLogin, logout } from './reducers/userReducer'
+import Bloglist from './components/Bloglist'
+import Userlist from './components/Userlist'
+import { getUsers } from './reducers/usersReducer'
 
 const InfoMessage = (props) => {
   if (props.message) {
@@ -20,10 +23,10 @@ const InfoMessage = (props) => {
 }
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [ infoMessage, setInfoMessage ] = useState(null)
   const [ activeStyle, setActiveStyle ] = useState({})
 
@@ -49,32 +52,23 @@ const App = () => {
     marginBottom: 10
   }
 
-  const updateBlogs = () => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    )
-  }
-
   useEffect(() => {
-    updateBlogs()
+    dispatch(getBlogs())
+    dispatch(getUsers())
 
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
-      setUser(JSON.parse(loggedUserJSON))
-      
+      dispatch(storageLogin(JSON.parse(loggedUserJSON)))
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      dispatch(login({username, password}))
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       ) 
-      setUser(user)
       setUsername('')
       setPassword('')
       handleInfoMessage(`You have logged in`, infoStyle)
@@ -86,7 +80,7 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedUser')
-    setUser(null)
+    dispatch(logout())
     handleInfoMessage(`You have logged out`, infoStyle)
   }
 
@@ -108,14 +102,12 @@ const App = () => {
 
       {user !== null ?
         <Toggleable buttonLabel='create blog' ref={blogFormRef}>
-          <BlogForm user={user} updateBlogs={updateBlogs} handleInfoMessage={handleInfoMessage} infoStyle={infoStyle} />
+          <BlogForm handleInfoMessage={handleInfoMessage} infoStyle={infoStyle} />
         </Toggleable>
         : null}
 
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog._id} blog={blog} user={user} updateBlogs={updateBlogs} />
-      )}
+      <Bloglist />
+      <Userlist />
     </div>
   )
 }

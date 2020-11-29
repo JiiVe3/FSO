@@ -1,7 +1,10 @@
 import React, { useState, useRef } from 'react'
-import blogService from '../services/blogs'
+import { useDispatch, useSelector } from 'react-redux'
+import { create, getBlogs } from '../reducers/blogReducer'
 
-const BlogForm = ({user, updateBlogs, handleInfoMessage, infoStyle}) => {
+const BlogForm = ({updateBlogs, handleInfoMessage, infoStyle}) => {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -11,11 +14,11 @@ const BlogForm = ({user, updateBlogs, handleInfoMessage, infoStyle}) => {
   const handleCreateBlog = async (event) => {
     event.preventDefault()
     try {
-      await blogService.post({ title, author, url }, user)
+      dispatch(create({title, author, url}, user))
       setTitle('')
       setAuthor('')
       setUrl('')
-      updateBlogs()
+      dispatch(getBlogs())
       handleInfoMessage(`New Blog has been created`, infoStyle)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {

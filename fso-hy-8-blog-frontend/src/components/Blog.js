@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBlogs } from '../reducers/blogReducer'
 
-const Blog = ({ blog, user, updateBlogs }) => {
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user)
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -16,14 +20,14 @@ const Blog = ({ blog, user, updateBlogs }) => {
   const handleLike = async (event) => {
     event.preventDefault()
     await blogService.like(blog)
-    updateBlogs()
+    dispatch(getBlogs())
   }
 
   const handleRemove = async (event) => {
     event.preventDefault()
     if (window.confirm(`Do you want to remove the blog: ${blog.title}`)) {
       await blogService.remove(blog._id, user)
-      updateBlogs()
+      dispatch(getBlogs())
     }
   }
 
@@ -53,8 +57,6 @@ const Blog = ({ blog, user, updateBlogs }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  user: PropTypes.object,
-  updateBlogs: PropTypes.func.isRequired
 }
 
 export default Blog
