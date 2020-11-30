@@ -5,6 +5,10 @@ const Userlist = () => {
   const users = useSelector(state => state.users)
   return (
     <table>
+      <tr>
+        <th>name</th>
+        <th>blogs created</th>
+      </tr>
       {users.map(user => <tr>
         <th>{user.name}</th>
         <th>{user.blogs.length}</th>
