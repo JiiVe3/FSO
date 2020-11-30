@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import Toggleable from './components/Toggleable'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import BlogForm from './components/BlogForm'
 import { getBlogs } from './reducers/blogReducer'
 import { login, storageLogin, logout } from './reducers/userReducer'
-import Bloglist from './components/Bloglist'
-import Userlist from './components/Userlist'
+import Blogs from './components/Blogs'
+import Users from './components/Users'
 import { getUsers } from './reducers/usersReducer'
 
 const InfoMessage = (props) => {
@@ -93,8 +99,10 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Router>
       <InfoMessage message={infoMessage} style={activeStyle} />
+      <Link to='/blogs'>blogs</Link>
+      <Link to='/blogs'>users</Link>
 
       {user === null ?
         <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword} />
@@ -105,10 +113,18 @@ const App = () => {
           <BlogForm handleInfoMessage={handleInfoMessage} infoStyle={infoStyle} />
         </Toggleable>
         : null}
+      <Switch>
+        <Route path='/blogs'>
+          <Blogs />
+        </Route>
+        <Route path='/users'>
+          <Users />
+        </Route>
+        <Route path='/'>
 
-      <Bloglist />
-      <Userlist />
-    </div>
+        </Route>
+      </Switch>
+    </Router>
   )
 }
 
