@@ -1,6 +1,10 @@
 import React from 'react'
 
-const Comments = () => {
+const Comments = ({ blog }) => {
+    const addComment = (newComment) => {
+
+    }
+    
     return (
         <>
         </>
