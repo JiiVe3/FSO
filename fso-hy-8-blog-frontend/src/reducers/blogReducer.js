@@ -11,9 +11,9 @@ const blogReducer = (state = [], action) => {
   }
 }
 
-export const create = (blog, user) => {
+export const create = (blog, loggedUser) => {
   return async dispatch => {
-    const newBlog = await blogService.post(blog, user)
+    const newBlog = await blogService.post(blog, loggedUser)
     dispatch({
       type: 'CREATE',
       data: newBlog

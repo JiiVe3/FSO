@@ -11,10 +11,11 @@ import Login from './components/Login'
 import Logout from './components/Logout'
 import BlogForm from './components/BlogForm'
 import { getBlogs } from './reducers/blogReducer'
-import { login, storageLogin, logout } from './reducers/userReducer'
+import { login, storageLogin, logout } from './reducers/loggedUserReducer'
 import Blogs from './components/Blogs'
 import Users from './components/Users'
 import { getUsers } from './reducers/usersReducer'
+import Nav from './components/Nav';
 
 const InfoMessage = (props) => {
   if (props.message) {
@@ -30,7 +31,7 @@ const InfoMessage = (props) => {
 
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user)
+  const loggedUser = useSelector(state => state.loggedUser)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [ infoMessage, setInfoMessage ] = useState(null)
@@ -73,7 +74,7 @@ const App = () => {
     try {
       dispatch(login({username, password}))
       window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
+        'loggedUser', JSON.stringify(loggedUser)
       ) 
       setUsername('')
       setPassword('')
@@ -101,14 +102,14 @@ const App = () => {
   return (
     <Router>
       <InfoMessage message={infoMessage} style={activeStyle} />
-      <Link to='/blogs'>blogs</Link>
-      <Link to='/blogs'>users</Link>
+      <Nav />
 
-      {user === null ?
+
+      {loggedUser === null ?
         <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword} />
         : <Logout handleLogout={handleLogout} />}
 
-      {user !== null ?
+      {loggedUser !== null ?
         <Toggleable buttonLabel='create blog' ref={blogFormRef}>
           <BlogForm handleInfoMessage={handleInfoMessage} infoStyle={infoStyle} />
         </Toggleable>

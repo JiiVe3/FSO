@@ -1,6 +1,6 @@
 import loginService from "../services/login"
 
-const userReducer = (state = null, action) => {
+const loggedUserReducer = (state = null, action) => {
   switch (action.type) {
     case 'LOGIN':
       return action.data
@@ -38,4 +38,4 @@ export const logout = () => {
   }
 }
 
-export default userReducer
+export default loggedUserReducer

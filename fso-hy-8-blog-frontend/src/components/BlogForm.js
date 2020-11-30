@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { create, getBlogs } from '../reducers/blogReducer'
 
-const BlogForm = ({updateBlogs, handleInfoMessage, infoStyle}) => {
+const BlogForm = ({ handleInfoMessage, infoStyle }) => {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
+  const loggedUser = useSelector(state => state.loggedUser)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -14,7 +14,7 @@ const BlogForm = ({updateBlogs, handleInfoMessage, infoStyle}) => {
   const handleCreateBlog = async (event) => {
     event.preventDefault()
     try {
-      dispatch(create({title, author, url}, user))
+      dispatch(create({title, author, url}, loggedUser))
       setTitle('')
       setAuthor('')
       setUrl('')

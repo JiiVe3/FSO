@@ -1,13 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Router, Switch, useRouteMatch } from 'react-router-dom'
+import { Switch, useRouteMatch } from 'react-router-dom'
 import User from './User'
 
 const Users = () => {
   const users = useSelector(state => state.users)
   const match = useRouteMatch()
   return (
-    <Router>
+    <>
       <Switch>
         <Route path={`${match.path}/:id`}>
           <User />
@@ -19,13 +19,13 @@ const Users = () => {
               <th>blogs created</th>
             </tr>
             {users.map(user => <tr>
-              <th><Link to={`${match.url}/${user.objectId}`}>{user.name}</Link></th>
+              <th><Link to={`${match.url}/${user._id}`}>{user.name}</Link></th>
               <th>{user.blogs.length}</th>
             </tr>)}
           </table>
         </Route>
       </Switch>
-    </Router>
+    </>
   )
 }
 
