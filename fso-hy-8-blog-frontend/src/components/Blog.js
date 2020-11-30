@@ -28,6 +28,7 @@ const Blog = () => {
             <div>likes <span className='likes'>{blog.likes}</span> <button onClick={handleLike} className='likeButton'>like</button></div>
             <div>{blog.user.name}</div>
             {loggedUser ? loggedUser.username === blog.user.username ? <button onClick={handleRemove} className='removeButton'>remove</button> : null : null}
+            <Comments />
         </div>
     )
 }
