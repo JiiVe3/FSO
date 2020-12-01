@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getBlogs } from '../reducers/blogReducer'
 import blogService from '../services/blogs'
+import { getUsers } from '../reducers/usersReducer'
 import Comments from './Comments'
 
 const Blog = () => {
@@ -22,6 +23,7 @@ const Blog = () => {
         if (window.confirm(`Do you want to remove the blog: ${blog.title}`)) {
             await blogService.remove(blog._id, loggedUser)
             dispatch(getBlogs())
+            dispatch(getUsers())
         }
     }
 

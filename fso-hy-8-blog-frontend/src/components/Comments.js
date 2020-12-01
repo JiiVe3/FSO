@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Table } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { getBlogs } from '../reducers/blogReducer'
 import blogService from '../services/blogs'
@@ -18,7 +19,6 @@ const Comments = ({ blog }) => {
         <>
             <h2>comments</h2>
             <div>
-                new comment
                 <input
                     type="text"
                     value={newComment}
@@ -28,7 +28,11 @@ const Comments = ({ blog }) => {
                 />
                 <button onClick={addComment}>post</button>
             </div>
-            {blog.comments ? blog.comments.map((comment, index) => <div key={index}>{comment}</div>) : null}
+            <Table striped>
+                <tbody>
+                    {blog.comments ? blog.comments.map((comment, index) => <tr key={index}><th>{comment}</th></tr>) : null}
+                </tbody>
+            </Table>
         </>
     )
 }

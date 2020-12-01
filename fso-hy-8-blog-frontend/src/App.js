@@ -13,7 +13,7 @@ import { login, storageLogin } from './reducers/loggedUserReducer'
 import Blogs from './components/Blogs'
 import Users from './components/Users'
 import { getUsers } from './reducers/usersReducer'
-import Nav from './components/Nav';
+import Navigation from './components/Navigation';
 
 const InfoMessage = (props) => {
   if (props.message) {
@@ -94,7 +94,7 @@ const App = () => {
     <Router>
       <div className='container'>
         <InfoMessage message={infoMessage} style={activeStyle} />
-        <Nav infoStyle={infoStyle} handleInfoMessage={handleInfoMessage} />
+        <Navigation infoStyle={infoStyle} handleInfoMessage={handleInfoMessage} />
 
 
         {loggedUser === null ?

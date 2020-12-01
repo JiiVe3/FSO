@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { logout } from '../reducers/loggedUserReducer'
 
@@ -13,9 +14,7 @@ const Logout = ({ infoStyle, handleInfoMessage }) => {
   }
 
   return (
-    <div>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <Button onClick={handleLogout}>Logout</Button>
   )
 }
 

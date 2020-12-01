@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react'
+import { Button, Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { create, getBlogs } from '../reducers/blogReducer'
+import { getUsers } from '../reducers/usersReducer'
 
 const BlogForm = ({ handleInfoMessage, infoStyle }) => {
   const dispatch = useDispatch()
@@ -19,6 +21,7 @@ const BlogForm = ({ handleInfoMessage, infoStyle }) => {
       setAuthor('')
       setUrl('')
       dispatch(getBlogs())
+      dispatch(getUsers())
       handleInfoMessage(`New Blog has been created`, infoStyle)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
@@ -29,39 +32,41 @@ const BlogForm = ({ handleInfoMessage, infoStyle }) => {
   return (
     <div>
       <h2>Create New Blog</h2>
-      <form onSubmit={handleCreateBlog}>
-        <div>
-          title
-          <input
+      <Form onSubmit={handleCreateBlog}>
+        <Form.Group>
+          <Form.Label>Title</Form.Label>
+          <Form.Control
             type="text"
             value={title}
             name="Title"
             onChange={({ target }) => setTitle(target.value)}
             id="titleInput"
           />
-        </div>
-        <div>
-          author
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Author</Form.Label>
+          <Form.Control
             type="text"
             value={author}
             name="Author"
             onChange={({ target }) => setAuthor(target.value)}
             id="authorInput"
           />
-        </div>
-        <div>
-          url
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>URL</Form.Label>
+          <Form.Control
             type="text"
             value={url}
             name="Url"
             onChange={({ target }) => setUrl(target.value)}
             id="urlInput"
           />
-        </div>
-        <button type="submit" id="submitButton">create</button>
-      </form>
+        </Form.Group>
+        <Form.Group>
+          <Button type="submit" id="submitButton">create</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

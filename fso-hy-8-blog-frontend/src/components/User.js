@@ -1,4 +1,5 @@
 import React from 'react'
+import { Table } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 
@@ -11,14 +12,14 @@ const User = () => {
       <div>
           <h1>{user.name}</h1>
           <h2>added blogs</h2>
-          <table>
+          <Table striped>
             <tbody>
               {user.blogs.map(blog => <tr key={blog._id}>
                 <th><Link to={`/blogs/${blog._id}`}>{blog.title}</Link></th>
                 <th>{blog.author}</th>
               </tr>)}
             </tbody>
-          </table>
+          </Table>
       </div>
     )
   } else {
