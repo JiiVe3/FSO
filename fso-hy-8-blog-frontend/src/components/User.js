@@ -1,13 +1,29 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
 
-const User = ({ user }) => {
-  return (
-    <div>
-        <h1>{user.name}</h1>
-        <h2>added blogs</h2>
-        {user.blogs.map(blog => <Link to={`/blogs/${blog._id}`}><ListedBlog key={blog._id} blog={blog} /></Link>)}
-    </div>
-  )
+const User = () => {
+  const { id } = useParams()
+  const users = useSelector(state => state.users)
+  const user = users.find(user => user._id === id)
+  if (user) {
+    return (
+      <div>
+          <h1>{user.name}</h1>
+          <h2>added blogs</h2>
+          <table>
+            <tbody>
+              {user.blogs.map(blog => <tr key={blog._id}>
+                <th><Link to={`/blogs/${blog._id}`}>{blog.title}</Link></th>
+                <th>{blog.author}</th>
+              </tr>)}
+            </tbody>
+          </table>
+      </div>
+    )
+  } else {
+    return null
+  }
 }
 
 export default User

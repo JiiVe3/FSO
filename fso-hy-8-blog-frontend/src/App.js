@@ -4,14 +4,12 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import Toggleable from './components/Toggleable'
 import Login from './components/Login'
-import Logout from './components/Logout'
 import BlogForm from './components/BlogForm'
 import { getBlogs } from './reducers/blogReducer'
-import { login, storageLogin, logout } from './reducers/loggedUserReducer'
+import { login, storageLogin } from './reducers/loggedUserReducer'
 import Blogs from './components/Blogs'
 import Users from './components/Users'
 import { getUsers } from './reducers/usersReducer'
@@ -67,7 +65,7 @@ const App = () => {
     if (loggedUserJSON) {
       dispatch(storageLogin(JSON.parse(loggedUserJSON)))
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -84,13 +82,6 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedUser')
-    dispatch(logout())
-    handleInfoMessage(`You have logged out`, infoStyle)
-  }
-
   const handleInfoMessage = (message, style) => {
     setActiveStyle(style)
     setInfoMessage(message)
@@ -101,30 +92,31 @@ const App = () => {
 
   return (
     <Router>
-      <InfoMessage message={infoMessage} style={activeStyle} />
-      <Nav />
+      <div className='container'>
+        <InfoMessage message={infoMessage} style={activeStyle} />
+        <Nav infoStyle={infoStyle} handleInfoMessage={handleInfoMessage} />
 
 
-      {loggedUser === null ?
-        <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword} />
-        : <Logout handleLogout={handleLogout} />}
+        {loggedUser === null ?
+          <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword} />
+        :
+          <Toggleable buttonLabel='create blog' ref={blogFormRef}>
+            <BlogForm handleInfoMessage={handleInfoMessage} infoStyle={infoStyle} />
+          </Toggleable>
+        }
 
-      {loggedUser !== null ?
-        <Toggleable buttonLabel='create blog' ref={blogFormRef}>
-          <BlogForm handleInfoMessage={handleInfoMessage} infoStyle={infoStyle} />
-        </Toggleable>
-        : null}
-      <Switch>
-        <Route path='/blogs'>
-          <Blogs />
-        </Route>
-        <Route path='/users'>
-          <Users />
-        </Route>
-        <Route path='/'>
+        <Switch>
+          <Route path='/blogs'>
+            <Blogs />
+          </Route>
+          <Route path='/users'>
+            <Users />
+          </Route>
+          <Route path='/'>
 
-        </Route>
-      </Switch>
+          </Route>
+        </Switch>
+      </div>
     </Router>
   )
 }

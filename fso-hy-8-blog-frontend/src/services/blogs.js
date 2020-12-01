@@ -36,4 +36,12 @@ const like = (blog) => {
   return axios.put(`${baseUrl}/${blog._id}`, blog).then(response => response.data)
 }
 
-export default { getAll, post, remove, like }
+const addComment = (newComment, id) => {
+  return axios.request({
+    method: 'POST',
+    url: `${baseUrl}/${id}/comments`,
+    data: {newComment}
+  }).then(response => response.data)
+}
+
+export default { getAll, post, remove, like, addComment }

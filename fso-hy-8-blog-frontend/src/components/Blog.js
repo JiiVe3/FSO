@@ -1,11 +1,15 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { getBlogs } from '../reducers/blogReducer'
+import blogService from '../services/blogs'
+import Comments from './Comments'
 
 const Blog = () => {
+    const dispatch = useDispatch()
     const { id } = useParams()
     const [ blogs, loggedUser ] = useSelector(state => [ state.blogs, state.loggedUser ])
-    const blog = blogs.find(blog => blog._id == id)
+    const blog = blogs.find(blog => blog._id === id)
 
     const handleLike = async (event) => {
         event.preventDefault()
@@ -21,16 +25,20 @@ const Blog = () => {
         }
     }
 
-    return (
-        <div>
-            <div>{blog.title} {blog.author}</div>
-            <div>{blog.url}</div>
-            <div>likes <span className='likes'>{blog.likes}</span> <button onClick={handleLike} className='likeButton'>like</button></div>
-            <div>{blog.user.name}</div>
-            {loggedUser ? loggedUser.username === blog.user.username ? <button onClick={handleRemove} className='removeButton'>remove</button> : null : null}
-            <Comments />
-        </div>
-    )
+    if (blog) {
+        return (
+            <div>
+                <h2>{blog.title} by {blog.author}</h2>
+                <div>{blog.url}</div>
+                <div>likes <span className='likes'>{blog.likes}</span> <button onClick={handleLike} className='likeButton'>like</button></div>
+                <div>{blog.user.name}</div>
+                {loggedUser ? loggedUser.username === blog.user.username ? <button onClick={handleRemove} className='removeButton'>remove</button> : null : null}
+                <Comments blog={blog} />
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 export default Blog

@@ -1,6 +1,7 @@
 import React from 'react'
+import { Table } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { Switch, useRouteMatch } from 'react-router-dom'
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom'
 import User from './User'
 
 const Users = () => {
@@ -13,16 +14,21 @@ const Users = () => {
           <User />
         </Route>
         <Route path={match.path}>
-          <table>
-            <tr>
-              <th>name</th>
-              <th>blogs created</th>
-            </tr>
-            {users.map(user => <tr>
-              <th><Link to={`${match.url}/${user._id}`}>{user.name}</Link></th>
-              <th>{user.blogs.length}</th>
-            </tr>)}
-          </table>
+          <h2>users</h2>
+          <Table striped>
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>blogs created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(user => <tr key={user._id}>
+                <th><Link to={`${match.url}/${user._id}`}>{user.name}</Link></th>
+                <th>{user.blogs.length}</th>
+              </tr>)}
+            </tbody>
+          </Table>
         </Route>
       </Switch>
     </>

@@ -25,12 +25,21 @@ blogsRouter.post('/', async (request, response) => {
         const user = await User.findById(decodedToken.id)
 
         if (!blog.likes) {blog.likes = 0}
+        blog.comments = []
         blog.user = user._id
         const savedBlog = await blog.save()
         user.blogs = user.blogs.concat(savedBlog._id)
         await user.save()
         response.status(201).json(savedBlog)
     }
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    if (!blog.comments) blog.comments = []
+    blog.comments.push(request.body.newComment)
+    const newBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {new: true})
+    response.json(newBlog)
 })
 
 blogsRouter.delete('/:id', async (request,response) => {
@@ -54,6 +63,7 @@ blogsRouter.put('/:id', async (request,response) => {
     if (body.author) {blog.author = body.author}
     if (body.url) {blog.url = body.url}
     if (body.likes) {blog.likes = body.likes}
+    if (body.comments) {blog.comments = body.comments}
     if (body.user) {blog.user = body.user}
     const newBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {new: true})
     response.json(newBlog)
