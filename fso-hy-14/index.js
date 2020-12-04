@@ -1,4 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server')
+const { UniqueDirectiveNamesRule } = require('graphql')
+const { v1: uuidv1 } = require('uuid');
 
 let authors = [
   {
@@ -88,12 +90,13 @@ const typeDefs = gql`
     title: String!
     published: Int!
     author: String!
-    genres: Array!
+    genres: [String]!
     id: ID!
   }
 
   type Author {
     name: String!
+    born: Int
     bookCount: Int
     id: ID!
   }
@@ -101,8 +104,22 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks: [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!,
+      author: String!,
+      published: Int!,
+      genres: [String]!
+    ) : Book
+
+    editAuthor(
+      name: String!
+      setBorn: Int!  
+    ) : Author
   }
 `
 
@@ -110,8 +127,35 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: () => books,
-    allAuthors: () => authors
+    allBooks: (root, args) => {
+      let newBooks = books
+      if (args.author) newBooks = newBooks.filter(book => book.author === args.author)
+      if (args.genre) newBooks = newBooks.filter(book => book.genres.includes(args.genre))
+      return newBooks
+    },
+    allAuthors: () => {
+      let newAuthors = authors
+      newAuthors.forEach((author, index) => {
+        newAuthors[index].bookCount = books.filter(book => book.author === author.name).length
+      })
+      return newAuthors
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      if (!authors.find(author => author.name === args.author)) {
+        authors = authors.concat({name: args.author, id: uuidv1()})
+      }
+      const newBook = {...args, id: uuidv1()}
+      books = books.concat(newBook)
+      return newBook
+    },
+    editAuthor: (root, args) => {
+      index = authors.findIndex(author => author.name === args.name)
+      if (index === -1) return null
+      authors[index].born = args.setBorn
+      return authors[index]
+    } 
   }
 }
 
