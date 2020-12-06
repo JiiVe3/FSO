@@ -3,7 +3,7 @@ interface ParsedExerciseArgv {
   target: number
 }
 
-const calculateExercises = (days: Array<number>, target: number): object => {
+export const calculateExercises = (days: Array<number>, target: number): object => {
   const result = {
     periodLength: days.length,
     trainingDays: days.filter(day => day != 0).length,
@@ -38,6 +38,14 @@ const calculateExercises = (days: Array<number>, target: number): object => {
 
   return result;
 };
+
+export const parseExercise = (days: Array<number>, target: number): ParsedExerciseArgv => {
+  if (isNaN(Number(target))) throw new Error('Provided target hours were not a number.');
+  days.forEach(day => {
+    if (isNaN(Number(day))) throw new Error('Provided daily hours contain not a number.');
+  });
+  return {days, target};
+}
 
 const parseExerciseArgv = (argv: Array<string>): ParsedExerciseArgv => {
   let days: Array<number> = [];

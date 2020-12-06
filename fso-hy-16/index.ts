@@ -1,5 +1,6 @@
 import express from 'express';
 import { calculateBmi, parseBmi } from './bmiCalculator';
+import { calculateExercises, parseExercise } from './exerciseCalculator';
 
 const app = express();
 
@@ -14,6 +15,16 @@ app.get('/bmi', (req, res) => {
     res.json({weight, height, bmi});
   } catch (error) {
     res.json({error})
+  }
+});
+
+app.post('/exercises', (req, res) => {
+  try {
+    const {days, target} = parseExercise(req.body.days, req.body.target);
+    const result = calculateExercises(days, target);
+    res.json(result);
+  } catch (error) {
+    res.json({error});
   }
 });
 
