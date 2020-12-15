@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ALL_AUTHORS, EDIT_BORN } from '../queries'
 
 const Authors = (props) => {
@@ -10,6 +10,10 @@ const Authors = (props) => {
     refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => console.log(error)
   })
+
+  useEffect(() => {
+    result.refetch()
+  }, [props.show])
 
   if (!props.show) {
     return null
