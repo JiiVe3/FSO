@@ -90,3 +90,24 @@ export const EDIT_BORN = gql`
     }
   }
 `
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title,
+      published,
+      genres,
+      id
+    }
+  }
+`
+
+export const AUTHOR_ADDED = gql`
+  subscription {
+    authorAdded {
+      name,
+      born,
+      id
+    }
+  }
+`

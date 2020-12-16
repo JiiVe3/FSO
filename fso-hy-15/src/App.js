@@ -4,8 +4,9 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Recommended from './components/Recommended'
+import { ALL_AUTHORS, ALL_BOOKS, AUTHOR_ADDED, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -15,6 +16,49 @@ const App = () => {
   useEffect(() => {
     if (localStorage.getItem('token')) setToken(localStorage.getItem('token'))
   }, [])
+
+  const updateBookCacheWith = (addedBook) => {
+    const includedIn = (set, object) => 
+      set.map(a => a.id).includes(object.id)  
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }   
+  }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+      const addedBook = subscriptionData.data.bookAdded
+      window.alert(`${addedBook.title} added`)
+      updateBookCacheWith(addedBook)
+    }
+  })
+
+  const updateAuthorCacheWith = (addedAuthor) => {
+    const includedIn = (set, object) => 
+      set.map(a => a.id).includes(object.id)  
+
+    const dataInStore = client.readQuery({ query: ALL_AUTHORS })
+    if (!includedIn(dataInStore.allAuthors, addedAuthor)) {
+      client.writeQuery({
+        query: ALL_AUTHORS,
+        data: { allAuthors : dataInStore.allAuthors.concat(addedAuthor) }
+      })
+    }   
+  }
+
+  useSubscription(AUTHOR_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedAuthor = subscriptionData.data.authorAdded
+      window.alert(`${addedAuthor.name} added`)
+      updateAuthorCacheWith(addedAuthor)
+    }
+  })
 
   const logout = () => {
     setToken(null)
